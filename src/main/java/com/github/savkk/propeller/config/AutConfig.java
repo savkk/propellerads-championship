@@ -9,16 +9,24 @@ import org.aeonbits.owner.Config;
         "classpath:aut.properties"})
 public interface AutConfig extends Config {
 
+    @DefaultValue("http://localhost")
+    @Key("aut.host")
+    int host();
+
+    @DefaultValue("8080")
+    @Key("aut.port")
+    int port();
+
+    @DefaultValue("true")
+    @Key("aut.testcontainers.enable")
+    boolean enableTestContainers();
+
     @DefaultValue("qapropeller/qa-battle:latest")
-    @Key("aut.docker-image")
+    @Key("aut.testcontainers.docker-image")
     String dockerImage();
 
     @DefaultValue("8080")
-    @Key("aut.host-port")
-    int hostPort();
-
-    @DefaultValue("8080")
-    @Key("aut.container-port")
+    @Key("aut.testcontainers.container-port")
     int containerPort();
 
 }

@@ -25,15 +25,17 @@ public class PropellerTests {
 
     @BeforeTest
     public void initAut() {
-        aut = new FixedHostPortGenericContainer(autConfig.dockerImage())
-                .withFixedExposedPort(autConfig.hostPort(), autConfig.containerPort());
-        aut.start();
+        if (autConfig.enableTestContainers()) {
+            aut = new FixedHostPortGenericContainer(autConfig.dockerImage())
+                    .withFixedExposedPort(autConfig.port(), autConfig.containerPort());
+            aut.start();
+        }
     }
 
     @BeforeMethod
     public void initDriver() {
         webDriver = WebDriverFactory.getInstance(webDriverConfig);
-        atlas = new Atlas(new WebDriverConfiguration(webDriver, "http://localhost:" + autConfig.hostPort()));
+        atlas = new Atlas(new WebDriverConfiguration(webDriver, autConfig.host() + ":" + autConfig.port()));
     }
 
     @Test
@@ -53,6 +55,8 @@ public class PropellerTests {
 
     @AfterTest
     public void stopAut() {
-        aut.stop();
+        if (autConfig.enableTestContainers()) {
+            aut.stop();
+        }
     }
 }
