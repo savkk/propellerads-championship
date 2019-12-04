@@ -3,8 +3,6 @@ package com.github.savkk.propeller;
 import com.github.savkk.propeller.config.AutConfig;
 import com.github.savkk.propeller.config.WebDriverConfig;
 import io.qameta.allure.Allure;
-import io.qameta.atlas.core.Atlas;
-import io.qameta.atlas.webdriver.WebDriverConfiguration;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -12,12 +10,14 @@ import org.openqa.selenium.WebDriver;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testng.ITestResult;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 
 import java.io.ByteArrayInputStream;
 
-public class PropellerTests {
-    private Atlas atlas;
+public class PropellerAdsTests {
     private WebDriver webDriver;
     private GenericContainer aut;
     private WebDriverConfig webDriverConfig = ConfigFactory.create(WebDriverConfig.class);
@@ -35,11 +35,7 @@ public class PropellerTests {
     @BeforeMethod
     public void initDriver() {
         webDriver = WebDriverFactory.getInstance(webDriverConfig);
-        atlas = new Atlas(new WebDriverConfiguration(webDriver, autConfig.host() + ":" + autConfig.port()));
-    }
-
-    @Test
-    public void firstTest() {
+        webDriver.get(autConfig.host() + ":" + autConfig.port());
     }
 
     @AfterMethod
@@ -55,8 +51,12 @@ public class PropellerTests {
 
     @AfterTest
     public void stopAut() {
-        if (autConfig.enableTestContainers()) {
+        if (autConfig.enableTestContainers() && aut != null) {
             aut.stop();
         }
+    }
+
+    protected WebDriver getWebDriver() {
+        return webDriver;
     }
 }
