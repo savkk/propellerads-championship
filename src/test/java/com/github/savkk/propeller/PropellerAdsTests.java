@@ -24,6 +24,7 @@ public class PropellerAdsTests {
     private GenericContainer aut;
     private WebDriverConfig webDriverConfig = ConfigFactory.create(WebDriverConfig.class);
     private AutConfig autConfig = ConfigFactory.create(AutConfig.class);
+    protected static final int WEBDRIVER_WAIT_TIMEOUT = timeOutsConfig.webDriverWait();
 
     @BeforeTest
     public void initAut() {

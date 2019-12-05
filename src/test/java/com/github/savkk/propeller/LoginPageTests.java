@@ -11,7 +11,6 @@ import org.testng.annotations.Test;
 
 @Feature("Вход в систему")
 public class LoginPageTests extends PropellerAdsTests {
-    private static final int WEBDRIVER_WAIT_TIMEOUT = timeOutsConfig.webDriverWait();
     private CredentialsConfig credentialsConfig = ConfigFactory.create(CredentialsConfig.class);
 
     @Test
@@ -27,13 +26,10 @@ public class LoginPageTests extends PropellerAdsTests {
     @Story("Вход с невалидными данными")
     public void invalidCreds() {
         LoginPageSteps loginPageSteps = new LoginPageSteps(getWebDriver());
-        loginPageSteps.fillField("Your Login", "foo");
-        loginPageSteps.fillField("Your Password", "bar");
-        loginPageSteps.clickSignIn();
-        loginPageSteps.acceptAlert("Are you sure you want to login?", WEBDRIVER_WAIT_TIMEOUT);
-        loginPageSteps.acceptAlert("Really sure?", timeOutsConfig.webDriverWait());
+        loginPageSteps.isLoaded();
+        loginPageSteps.signIn("foo", "bar");
         loginPageSteps.acceptAlert("Authentication failed. Please re-enter your login credentials",
-                timeOutsConfig.webDriverWait());
+                WEBDRIVER_WAIT_TIMEOUT);
         Assert.assertTrue(loginPageSteps.isLoaded());
     }
 }
