@@ -2,29 +2,63 @@ package com.github.savkk.propeller.steps;
 
 import com.github.savkk.propeller.pages.LoginPage;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoginPageSteps extends Steps<LoginPage> {
+import static ru.yandex.qatools.matchers.webdriver.DisplayedMatcher.displayed;
+
+public final class LoginPageSteps extends PageSteps<LoginPage> {
     private static final Logger log = LoggerFactory.getLogger(LoginPageSteps.class);
 
-    @Step("Войти в систему под пользователем - {user}")
-    public void login(String user, String password) {
-        log.info("Войти в систему под пользователем - {}", user);
-        $().field("Your Login").findElement(By.xpath("./parent::div")).click();
-        $().field("Your Login").sendKeys(user);
-        $().field("Your Password").findElement(By.xpath("./parent::div")).click();
-        $().field("Your Password").sendKeys(password);
+    @Step("Войти в систему под - '{user}'/'{password}'")
+    public void signIn(String user, String password) {
+        log.info("Войти в систему под пользователем - '{}'/'{}'", user, password);
+        fillField("Your Login", user);
+        fillField("Your Password", password);
+        clickSignIn();
+        acceptAlert("Are you sure you want to login?", timeOutsConfig.webDriverWait());
+        acceptAlert("Really sure?", timeOutsConfig.webDriverWait());
     }
+
+    @Step("Активировать и заполнить поле '{fieldTitle}' значением '{value}'")
+    public LoginPageSteps fillField(String fieldTitle, String value) {
+        log.info("Активировать и заполнить поле '{}' значением '{}'", fieldTitle, value);
+        $().field(fieldTitle).activator().click();
+        $().field(fieldTitle).sendKeys(value);
+        return this;
+    }
+
+    @Step("Подождать появление кнопки 'Sign In' и нажать на неё")
+    public LoginPageSteps clickSignIn() {
+        log.info("Подождать появление кнопки 'Sign In' и нажать на неё");
+        moveToElement($().button("Hover me faster!"), "Навести курсор на кнопку 'Hover me faster!'");
+        $().signInButton()
+                .waitUntil("Кнопка Sign In не отобразилась", displayed(), timeOutsConfig.webDriverWait())
+                .click();
+        return this;
+    }
+
 
     public LoginPageSteps(WebDriver webDriver) {
         super(webDriver);
     }
 
     @Override
-    LoginPage $() {
+    protected LoginPage $() {
         return open(LoginPage.class);
+    }
+
+    @Override
+    public boolean isLoaded() {
+        try {
+            $().title().isDisplayed();
+            $().field("Your Login").isDisplayed();
+            $().field("Your Password").isDisplayed();
+            return true;
+        } catch (WebDriverException e) {
+            return false;
+        }
     }
 }

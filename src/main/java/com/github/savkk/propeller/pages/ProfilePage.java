@@ -6,10 +6,8 @@ import io.qameta.atlas.webdriver.AtlasWebElement;
 import io.qameta.atlas.webdriver.WebPage;
 import io.qameta.atlas.webdriver.extension.FindBy;
 
-public interface LoginPage extends WithButton, WithField, WebPage {
-    @FindBy("//img[contains(@src, 'sign')]")
-    AtlasWebElement signInButton();
+public interface ProfilePage extends WithField, WithButton, WebPage {
 
-    @FindBy("//h4[text()='Welcome to Propeller Championship!']")
-    AtlasWebElement title();
+    @FindBy("//select[@id='paymentSystemSelect']")
+    AtlasWebElement paymentSystemSelect();
 }

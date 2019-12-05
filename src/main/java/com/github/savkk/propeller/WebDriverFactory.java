@@ -24,12 +24,12 @@ public class WebDriverFactory {
     }
 
     public static WebDriver getInstance(WebDriverConfig webDriverConfig) {
-        WebDriver webDriver;
         String driverVersion = webDriverConfig.driverVersion();
         Architecture architecture = webDriverConfig.driverArchitecture();
         log.info("WebDriver - {}", webDriverConfig.driverType());
         log.info("WebDriver version - {}", webDriverConfig.driverVersion());
         log.info("WebDriver architecture - {}", webDriverConfig.driverArchitecture());
+        WebDriver webDriver;
         switch (webDriverConfig.driverType().toLowerCase()) {
             case CHROME:
                 webDriver = getChromeDriver(driverVersion, architecture);

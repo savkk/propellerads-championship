@@ -1,6 +1,7 @@
 package com.github.savkk.propeller;
 
 import com.github.savkk.propeller.config.AutConfig;
+import com.github.savkk.propeller.config.TimeOutsConfig;
 import com.github.savkk.propeller.config.WebDriverConfig;
 import io.qameta.allure.Allure;
 import org.aeonbits.owner.ConfigFactory;
@@ -18,6 +19,7 @@ import org.testng.annotations.BeforeTest;
 import java.io.ByteArrayInputStream;
 
 public class PropellerAdsTests {
+    protected static final TimeOutsConfig timeOutsConfig = ConfigFactory.create(TimeOutsConfig.class);
     private WebDriver webDriver;
     private GenericContainer aut;
     private WebDriverConfig webDriverConfig = ConfigFactory.create(WebDriverConfig.class);
