@@ -27,6 +27,7 @@
         <lombok.version>1.18.10</lombok.version>
         <slf4j-log4j12.version>1.7.29</slf4j-log4j12.version>
         <webdriver-matchers.version>1.4.1</webdriver-matchers.version>
+        <assertj-core.version>3.11.0</assertj-core.version>
     </properties>
 
     <build>
@@ -136,7 +137,12 @@
             <artifactId>webdriver-matchers</artifactId>
             <version>${webdriver-matchers.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <repositories>

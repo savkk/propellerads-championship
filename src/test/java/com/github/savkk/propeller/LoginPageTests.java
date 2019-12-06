@@ -1,17 +1,14 @@
 package com.github.savkk.propeller;
 
-import com.github.savkk.propeller.config.CredentialsConfig;
 import com.github.savkk.propeller.steps.ArticlesPageSteps;
 import com.github.savkk.propeller.steps.LoginPageSteps;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.aeonbits.owner.ConfigFactory;
 import org.junit.Assert;
 import org.testng.annotations.Test;
 
-@Feature("Вход в систему")
+@Feature("Страница логина")
 public class LoginPageTests extends PropellerAdsTests {
-    private CredentialsConfig credentialsConfig = ConfigFactory.create(CredentialsConfig.class);
 
     @Test
     @Story("Вход с валидными данными")

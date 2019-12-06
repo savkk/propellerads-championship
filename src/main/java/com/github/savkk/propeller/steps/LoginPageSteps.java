@@ -18,8 +18,8 @@ public final class LoginPageSteps extends PageSteps<LoginPage> {
         fillField("Your Login", user);
         fillField("Your Password", password);
         clickSignIn();
-        acceptAlert("Are you sure you want to login?", timeOutsConfig.webDriverWait());
-        acceptAlert("Really sure?", timeOutsConfig.webDriverWait());
+        acceptAlert("Are you sure you want to login?", TIMEOUTS_CONFIG.webDriverWait());
+        acceptAlert("Really sure?", TIMEOUTS_CONFIG.webDriverWait());
     }
 
     @Step("Активировать и заполнить поле '{fieldTitle}' значением '{value}'")
@@ -35,7 +35,7 @@ public final class LoginPageSteps extends PageSteps<LoginPage> {
         log.info("Подождать появление кнопки 'Sign In' и нажать на неё");
         moveToElement($().button("Hover me faster!"), "Навести курсор на кнопку 'Hover me faster!'");
         $().signInButton()
-                .waitUntil("Кнопка Sign In не отобразилась", displayed(), timeOutsConfig.webDriverWait())
+                .waitUntil("Кнопка Sign In не отобразилась", displayed(), TIMEOUTS_CONFIG.webDriverWait())
                 .click();
         return this;
     }

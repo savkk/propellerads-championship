@@ -17,7 +17,8 @@ abstract class PageSteps<T> {
     private static final Logger log = LoggerFactory.getLogger(PageSteps.class);
     private final WebDriver webDriver;
     private final Atlas atlas;
-    protected static final TimeOutsConfig timeOutsConfig = ConfigFactory.create(TimeOutsConfig.class);
+    protected static final TimeOutsConfig TIMEOUTS_CONFIG = ConfigFactory.create(TimeOutsConfig.class);
+    protected static final int WEBDRIVER_WAIT_TIMEOUT = TIMEOUTS_CONFIG.webDriverWait();
 
     protected PageSteps(WebDriver webDriver) {
         this.webDriver = webDriver;
