@@ -1,13 +1,14 @@
 package com.github.savkk.propeller.steps;
 
 import com.github.savkk.propeller.config.TimeOutsConfig;
-import io.qameta.allure.Attachment;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import io.qameta.atlas.core.Atlas;
 import io.qameta.atlas.webdriver.WebDriverConfiguration;
 import org.aeonbits.owner.ConfigFactory;
 import org.awaitility.Durations;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -41,8 +42,6 @@ abstract class PageSteps<T> {
         return atlas.create(webDriver, page);
     }
 
-    protected abstract T $();
-
     public WebDriver getWebDriver() {
         return webDriver;
     }
@@ -63,6 +62,7 @@ abstract class PageSteps<T> {
         return (T) this;
     }
 
+    @Step("Навести курсор на элемент {element}")
     public void moveToElement(WebElement element) {
         new Actions(getWebDriver())
                 .moveToElement(element)
@@ -76,7 +76,6 @@ abstract class PageSteps<T> {
     }
 
     @Step("Получить текст из файла {filePath}")
-    @Attachment("Текст")
     public String getTextFromFile(Path filePath) {
         await("Не удалось прочитать файла " + filePath.toString())
                 .timeout(Durations.ONE_MINUTE)
@@ -84,11 +83,24 @@ abstract class PageSteps<T> {
                 .until(() -> Files.isReadable(filePath));
         log.info("Получить текст из файла {}", filePath);
         try {
-            return new String(Files.readAllBytes(filePath));
+            String text = new String(Files.readAllBytes(filePath));
+            Allure.addAttachment("Текст", text);
+            return text;
         } catch (IOException e) {
             throw new IllegalStateException("Не удалось прочитать файл " + filePath.toString());
         }
     }
+
+    @Step("Получить куки {cookieKey}")
+    public Cookie getCookie(String cookieKey) {
+        log.info("Получить куки {}", cookieKey);
+        Cookie cookieNamed = getWebDriver().manage().getCookieNamed(cookieKey);
+        log.info("Значение куки - {}", cookieNamed.toString());
+        Allure.addAttachment("Значение куки", String.valueOf(cookieNamed));
+        return cookieNamed;
+    }
+
+    protected abstract T $();
 
     public abstract boolean isLoaded();
 }

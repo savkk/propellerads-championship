@@ -7,6 +7,7 @@ import io.qameta.allure.Story;
 import io.qameta.atlas.webdriver.ElementsCollection;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Assert;
+import org.openqa.selenium.Cookie;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -68,8 +69,32 @@ public class ArticlesPageTests extends Fixtures {
         articlesPageSteps.clickButton("Test Advertiser");
         Assert.assertFalse("Кнопка Move to saved не должна быть активной",
                 articlesPageSteps.buttonIsEnabled("Move to saved"));
-        articlesPageSteps.scrolldownArticleDescription();
+        articlesPageSteps.scrollDownArticleDescription();
         Assert.assertTrue("Кнопка Move to saved должна быть активной",
                 articlesPageSteps.buttonIsEnabled("Move to saved"));
+    }
+
+    @Test
+    @Story("Проверка добавления открытых разделов в куки notSavedOpened")
+    public void notSavedOpenedCookieTest() {
+        ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Cookie notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
+        Assert.assertNull(notSavedOpened);
+        articlesPageSteps.clickButton("Advertisers");
+        notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
+        Assert.assertNotNull(notSavedOpened);
+        Assert.assertTrue(notSavedOpened.getValue().contains("Advertisers"));
+        articlesPageSteps.clickButton("Publishers");
+        notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
+        Assert.assertNotNull(notSavedOpened);
+        Assert.assertTrue(notSavedOpened.getValue().contains("Advertisers") &&
+                notSavedOpened.getValue().contains("Publishers"));
+        articlesPageSteps.clickButton("Top level clients");
+        notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
+        Assert.assertNotNull(notSavedOpened);
+        Assert.assertTrue(notSavedOpened.getValue().contains("Advertisers") &&
+                notSavedOpened.getValue().contains("Publishers") &&
+                notSavedOpened.getValue().contains("Top level clients"));
     }
 }
