@@ -2,6 +2,7 @@ package com.github.savkk.propeller.steps;
 
 import com.github.savkk.propeller.pages.LoginPage;
 import io.qameta.allure.Step;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
@@ -59,5 +60,12 @@ public final class LoginPageSteps extends PageSteps<LoginPage> {
         } catch (WebDriverException e) {
             return false;
         }
+    }
+
+    @Step("Войти в систему используя куки")
+    public void signInByCookie(String secretKey, String secretValue) {
+        Cookie cookie = new Cookie(secretKey, secretValue);
+        getWebDriver().manage().addCookie(cookie);
+        getWebDriver().navigate().refresh();
     }
 }

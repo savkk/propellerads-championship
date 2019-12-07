@@ -15,4 +15,9 @@ public interface CredentialsConfig extends Config {
     @Key("aut.password")
     String password();
 
+    @Key("aut.cookie.secret.key")
+    String cookieSecretKey();
+
+    @Key("aut.cookie.secret.value")
+    String cookieSecretValue();
 }

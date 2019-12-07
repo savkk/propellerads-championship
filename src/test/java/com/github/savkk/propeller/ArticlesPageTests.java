@@ -20,7 +20,7 @@ public class ArticlesPageTests extends Fixtures {
     public void login() {
         LoginPageSteps loginPageSteps = new LoginPageSteps(getWebDriver());
         Assert.assertTrue("Страница логина не загрузилась", loginPageSteps.isLoaded());
-        loginPageSteps.signIn(credentialsConfig.login(), credentialsConfig.password());
+        loginPageSteps.signInByCookie(credentialsConfig.cookieSecretKey(), credentialsConfig.cookieSecretValue());
     }
 
     @Test
