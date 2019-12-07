@@ -1,6 +1,7 @@
 package com.github.savkk.propeller.steps;
 
 import com.github.savkk.propeller.pages.ArticlesPage;
+import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import io.qameta.atlas.webdriver.ElementsCollection;
@@ -21,10 +22,9 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
     @Override
     public boolean isLoaded() {
         try {
-            $().button("Advertisers").isDisplayed();
-            $().button("Publishers").isDisplayed();
-            $().button("Top level clients").isDisplayed();
-            return true;
+            return $().button("Advertisers").isDisplayed() &&
+                    $().button("Publishers").isDisplayed() &&
+                    $().button("Top level clients").isDisplayed();
         } catch (WebDriverException e) {
             return false;
         }
@@ -35,6 +35,15 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
         log.info("Кликнуть по кнопке {}", buttonTitle);
         $().button(buttonTitle).waitUntil("Кнопка " + buttonTitle + " не отобразилась", displayed(), WEBDRIVER_WAIT_TIMEOUT)
                 .click();
+    }
+
+    @Step("Получить описание из открытой статьи")
+    @Attachment("Тект описания")
+    public String getArticleDescription() {
+        log.info("Получить описание из открытой статьи");
+        String text = $().discription().getAttribute("value");
+        log.info("Текст описания: \n{}", text);
+        return text;
     }
 
     @Step("Получить список статей в разделе {sectionTitle}")

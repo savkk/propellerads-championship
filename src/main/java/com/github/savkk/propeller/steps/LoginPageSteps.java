@@ -53,10 +53,9 @@ public final class LoginPageSteps extends PageSteps<LoginPage> {
     @Override
     public boolean isLoaded() {
         try {
-            $().title().isDisplayed();
-            $().field("Your Login").isDisplayed();
-            $().field("Your Password").isDisplayed();
-            return true;
+            return $().title().isDisplayed() &&
+                    $().field("Your Login").isDisplayed() &&
+                    $().field("Your Password").isDisplayed();
         } catch (WebDriverException e) {
             return false;
         }

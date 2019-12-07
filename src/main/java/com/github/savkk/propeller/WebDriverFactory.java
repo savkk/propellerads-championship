@@ -2,11 +2,10 @@ package com.github.savkk.propeller;
 
 import com.github.savkk.propeller.config.WebDriverConfig;
 import io.github.bonigarcia.wdm.Architecture;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +22,7 @@ public class WebDriverFactory {
         throw new IllegalStateException();
     }
 
-    public static WebDriver getInstance(WebDriverConfig webDriverConfig) {
+    public static WebDriver getInstance(WebDriverConfig webDriverConfig, Capabilities capabilities) {
         String driverVersion = webDriverConfig.driverVersion();
         Architecture architecture = webDriverConfig.driverArchitecture();
         log.info("WebDriver - {}", webDriverConfig.driverType());
@@ -32,10 +31,10 @@ public class WebDriverFactory {
         WebDriver webDriver;
         switch (webDriverConfig.driverType().toLowerCase()) {
             case CHROME:
-                webDriver = getChromeDriver(driverVersion, architecture);
+                webDriver = getChromeDriver(driverVersion, architecture, capabilities);
                 break;
             case FIREFOX:
-                webDriver = getFirefoxDriver(driverVersion, architecture);
+                webDriver = getFirefoxDriver(driverVersion, architecture, capabilities);
                 break;
             default:
                 throw new IllegalStateException("Нет реализации для создания инстанса дайвера - " + webDriverConfig.driverType());
@@ -51,21 +50,19 @@ public class WebDriverFactory {
         return webDriver;
     }
 
-    private static WebDriver getFirefoxDriver(String driverVersion, Architecture architecture) {
+    private static WebDriver getFirefoxDriver(String driverVersion, Architecture architecture, Capabilities capabilities) {
         firefoxdriver()
                 .architecture(architecture)
                 .version(driverVersion)
                 .setup();
-        FirefoxOptions options = new FirefoxOptions();
-        return new FirefoxDriver(options);
+        return new FirefoxDriver(capabilities);
     }
 
-    private static WebDriver getChromeDriver(String driverVersion, Architecture architecture) {
+    private static WebDriver getChromeDriver(String driverVersion, Architecture architecture, Capabilities capabilities) {
         chromedriver()
                 .architecture(architecture)
                 .version(driverVersion)
                 .setup();
-        ChromeOptions options = new ChromeOptions();
-        return new ChromeDriver(options);
+        return new ChromeDriver(capabilities);
     }
 }

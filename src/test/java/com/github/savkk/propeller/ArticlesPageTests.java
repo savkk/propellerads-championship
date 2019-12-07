@@ -6,16 +6,20 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import io.qameta.atlas.webdriver.ElementsCollection;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.nio.file.Paths;
+
 @Feature("Страница информации о существующих клиентах")
-public class ArticlesPageTests extends PropellerAdsTests {
+public class ArticlesPageTests extends Fixtures {
+    private static final String FILE_NAME = "data.txt";
 
     @BeforeMethod(description = "Вход в систему")
     public void login() {
         LoginPageSteps loginPageSteps = new LoginPageSteps(getWebDriver());
-        loginPageSteps.isLoaded();
+        Assert.assertTrue("Страница логина не загрузилась", loginPageSteps.isLoaded());
         loginPageSteps.signIn(credentialsConfig.login(), credentialsConfig.password());
     }
 
@@ -23,7 +27,7 @@ public class ArticlesPageTests extends PropellerAdsTests {
     @Story("Проверка количества статей по разделам")
     public void checkArticlesCount() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        articlesPageSteps.isLoaded();
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         SoftAssertions softAssertions = new SoftAssertions();
         ElementsCollection advertisers = articlesPageSteps.getArticleList("Advertisers");
@@ -40,5 +44,18 @@ public class ArticlesPageTests extends PropellerAdsTests {
         softAssertions.assertThat(topLevelClients).withFailMessage("Количество статей в разделе Top level clients отличается от ожидаемого")
                 .hasSize(10);
         softAssertions.assertAll();
+    }
+
+    @Test
+    @Story("Проверка скачивания описания из статьи")
+    public void checkArticleDownload() {
+        ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        articlesPageSteps.clickButton("Advertisers");
+        articlesPageSteps.clickButton("Test Advertiser");
+        articlesPageSteps.clickButton("Download info");
+        String articleDescription = articlesPageSteps.getArticleDescription();
+        String textFromFile = articlesPageSteps.getTextFromFile(Paths.get(getTempDirectory().toString(), FILE_NAME));
+        Assert.assertEquals(articleDescription, textFromFile);
     }
 }
