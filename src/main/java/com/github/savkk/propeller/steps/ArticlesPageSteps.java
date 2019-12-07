@@ -5,6 +5,7 @@ import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import io.qameta.atlas.webdriver.ElementsCollection;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
@@ -55,5 +56,19 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
     @Override
     protected ArticlesPage $() {
         return open(ArticlesPage.class);
+    }
+
+    @Step("Кнопка 'buttonTitle' активна")
+    @Attachment
+    public boolean buttonIsEnabled(String buttonTitle) {
+        return $().button(buttonTitle)
+                .waitUntil("Кнопка " + buttonTitle + " не отобразилась", displayed(), WEBDRIVER_WAIT_TIMEOUT)
+                .isEnabled();
+    }
+
+    @Step("Прокрутить описание статьи до конца")
+    public void scrolldownArticleDescription() {
+        ((JavascriptExecutor) getWebDriver()).executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;",
+                $().discription().getWrappedElement());
     }
 }

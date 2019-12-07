@@ -58,4 +58,18 @@ public class ArticlesPageTests extends Fixtures {
         String textFromFile = articlesPageSteps.getTextFromFile(Paths.get(getTempDirectory().toString(), FILE_NAME));
         Assert.assertEquals(articleDescription, textFromFile);
     }
+
+    @Test
+    @Story("Проверка, что кнопка Move to saved становится доступной только после полного прочтения описания")
+    public void moveToSavedTest() {
+        ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        articlesPageSteps.clickButton("Advertisers");
+        articlesPageSteps.clickButton("Test Advertiser");
+        Assert.assertFalse("Кнопка Move to saved не должна быть активной",
+                articlesPageSteps.buttonIsEnabled("Move to saved"));
+        articlesPageSteps.scrolldownArticleDescription();
+        Assert.assertTrue("Кнопка Move to saved должна быть активной",
+                articlesPageSteps.buttonIsEnabled("Move to saved"));
+    }
 }
