@@ -83,18 +83,66 @@ public class ArticlesPageTests extends Fixtures {
         Assert.assertNull(notSavedOpened);
         articlesPageSteps.clickButton("Advertisers");
         notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
-        Assert.assertNotNull(notSavedOpened);
-        Assert.assertTrue(notSavedOpened.getValue().contains("Advertisers"));
+        Assert.assertEquals("Advertisers", notSavedOpened.getValue());
         articlesPageSteps.clickButton("Publishers");
         notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
-        Assert.assertNotNull(notSavedOpened);
-        Assert.assertTrue(notSavedOpened.getValue().contains("Advertisers") &&
-                notSavedOpened.getValue().contains("Publishers"));
+        Assert.assertEquals(notSavedOpened.getValue(), "Advertisers,Publishers");
         articlesPageSteps.clickButton("Top level clients");
         notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
-        Assert.assertNotNull(notSavedOpened);
-        Assert.assertTrue(notSavedOpened.getValue().contains("Advertisers") &&
-                notSavedOpened.getValue().contains("Publishers") &&
-                notSavedOpened.getValue().contains("Top level clients"));
+        Assert.assertEquals(notSavedOpened.getValue(), "Advertisers,Publishers,Top level clients");
+    }
+
+    @Test
+    @Story("Проверка сохранения статьи")
+    public void articleMoveToSavedTest() {
+        ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        articlesPageSteps.clickButton("Advertisers");
+        articlesPageSteps.clickButton("Test Advertiser");
+        articlesPageSteps.scrollDownArticleDescription();
+        articlesPageSteps.clickButton("Move to saved");
+        Cookie saved = articlesPageSteps.getCookie("saved");
+        Assert.assertEquals("Test Advertiser", saved.getValue());
+    }
+
+    @Test
+    @Story("Проверка сохранения статей из каждого раздела")
+    public void articlesFromAllSectionsMoveToSavedTest() {
+        ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        articlesPageSteps.clickButton("Advertisers");
+        articlesPageSteps.clickButton("Test Advertiser");
+        articlesPageSteps.scrollDownArticleDescription();
+        articlesPageSteps.clickButton("Move to saved");
+        Cookie saved = articlesPageSteps.getCookie("saved");
+        Assert.assertEquals("Test Advertiser", saved.getValue());
+        articlesPageSteps.clickButton("Publishers");
+        articlesPageSteps.clickButton("Youtube");
+        articlesPageSteps.scrollDownArticleDescription();
+        articlesPageSteps.clickButton("Move to saved");
+        saved = articlesPageSteps.getCookie("saved");
+        Assert.assertEquals("Test Advertiser,Youtube", saved.getValue());
+        articlesPageSteps.clickButton("Top level clients");
+        articlesPageSteps.clickButton("Sasha Grey");
+        articlesPageSteps.scrollDownArticleDescription();
+        articlesPageSteps.clickButton("Move to saved");
+        saved = articlesPageSteps.getCookie("saved");
+        Assert.assertEquals("Test Advertiser,Youtube,Sasha Grey", saved.getValue());
+    }
+
+    @Test
+    @Story("Проверка удаления статьи")
+    public void articleRemoveFromSavedTest() {
+        ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        articlesPageSteps.clickButton("Advertisers");
+        articlesPageSteps.clickButton("Test Advertiser");
+        articlesPageSteps.scrollDownArticleDescription();
+        articlesPageSteps.clickButton("Move to saved");
+        Cookie saved = articlesPageSteps.getCookie("saved");
+        Assert.assertEquals("Test Advertiser", saved.getValue());
+        articlesPageSteps.clickButton("Removed from saved");
+        saved = articlesPageSteps.getCookie("saved");
+        Assert.assertNull(saved);
     }
 }

@@ -5,7 +5,7 @@ import com.github.savkk.propeller.elements.WithButton;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import io.qameta.atlas.webdriver.extension.FindBy;
 
-public interface Card extends WithButton {
+public interface Card extends AtlasWebElement<Card>, WithButton {
 
     @FindBy(".//h5[contains(@class, 'card-title')]")
     AtlasWebElement cardTitle();
@@ -14,7 +14,7 @@ public interface Card extends WithButton {
     AtlasWebElement cardText();
 
     @FindBy(".//textarea")
-    AtlasWebElement textArea();
+    AtlasWebElement discription();
 
     @FindBy(".//img[@id='heroImage']")
     AtlasWebElement heroImage();

@@ -1,6 +1,7 @@
 package com.github.savkk.propeller.pages;
 
 import com.github.savkk.propeller.elements.WithButton;
+import com.github.savkk.propeller.layout.Card;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import io.qameta.atlas.webdriver.ElementsCollection;
 import io.qameta.atlas.webdriver.WebPage;
@@ -14,6 +15,7 @@ public interface ArticlesPage extends WithButton, WebPage {
     @FindBy("//div[contains(@class, 'tree-main-node')][./button[.='{{ mainNode }}']]/div[contains(@class,'sub-tree')]//button")
     ElementsCollection<AtlasWebElement> subTreeButtons(@Param("mainNode") String mainNode);
 
-    @FindBy("//textarea")
-    AtlasWebElement discription();
+    @FindBy("//div[@id='dataCard']")
+    Card card();
+
 }

@@ -41,7 +41,7 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
     @Step("Получить описание из открытой статьи")
     public String getArticleDescription() {
         log.info("Получить описание из открытой статьи");
-        String text = $().discription().getAttribute("value");
+        String text = $().card().discription().getAttribute("value");
         log.info("Текст описания: \n{}", text);
         Allure.addAttachment("Текст", text);
         return text;
@@ -70,6 +70,6 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
     @Step("Прокрутить описание статьи до конца")
     public void scrollDownArticleDescription() {
         ((JavascriptExecutor) getWebDriver()).executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;",
-                $().discription().getWrappedElement());
+                $().card().discription().waitUntil(displayed()));
     }
 }

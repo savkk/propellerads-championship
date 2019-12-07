@@ -95,7 +95,7 @@ abstract class PageSteps<T> {
     public Cookie getCookie(String cookieKey) {
         log.info("Получить куки {}", cookieKey);
         Cookie cookieNamed = getWebDriver().manage().getCookieNamed(cookieKey);
-        log.info("Значение куки - {}", cookieNamed.toString());
+        log.info("Значение куки - {}", cookieNamed);
         Allure.addAttachment("Значение куки", String.valueOf(cookieNamed));
         return cookieNamed;
     }
