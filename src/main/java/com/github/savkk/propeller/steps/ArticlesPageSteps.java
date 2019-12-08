@@ -5,9 +5,8 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import io.qameta.atlas.webdriver.ElementsCollection;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,5 +70,16 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
     public void scrollDownArticleDescription() {
         ((JavascriptExecutor) getWebDriver()).executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;",
                 $().card().discription().waitUntil(displayed()));
+    }
+
+    @Step("Передвинуть слайдер на {offset} пикселей")
+    public void scrollSlider(int offset) {
+        WebElement slider = $().card().slider().waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT);
+        new Actions(getWebDriver()).dragAndDropBy(slider, offset, 0).perform();
+    }
+
+    @Step("Получить размеры изображения героя")
+    public Dimension getHeroImageSize() {
+        return $().card().heroImage().getSize();
     }
 }

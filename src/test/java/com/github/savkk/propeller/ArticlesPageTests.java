@@ -8,6 +8,7 @@ import io.qameta.atlas.webdriver.ElementsCollection;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Assert;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -115,19 +116,19 @@ public class ArticlesPageTests extends Fixtures {
         articlesPageSteps.scrollDownArticleDescription();
         articlesPageSteps.clickButton("Move to saved");
         Cookie saved = articlesPageSteps.getCookie("saved");
-        Assert.assertEquals("Test Advertiser", saved.getValue());
+        Assert.assertEquals("Значение куки отличается от ожидаемого", "Test Advertiser", saved.getValue());
         articlesPageSteps.clickButton("Publishers");
         articlesPageSteps.clickButton("Youtube");
         articlesPageSteps.scrollDownArticleDescription();
         articlesPageSteps.clickButton("Move to saved");
         saved = articlesPageSteps.getCookie("saved");
-        Assert.assertEquals("Test Advertiser,Youtube", saved.getValue());
+        Assert.assertEquals("Значение куки отличается от ожидаемого", "Test Advertiser,Youtube", saved.getValue());
         articlesPageSteps.clickButton("Top level clients");
         articlesPageSteps.clickButton("Sasha Grey");
         articlesPageSteps.scrollDownArticleDescription();
         articlesPageSteps.clickButton("Move to saved");
         saved = articlesPageSteps.getCookie("saved");
-        Assert.assertEquals("Test Advertiser,Youtube,Sasha Grey", saved.getValue());
+        Assert.assertEquals("Значение куки отличается от ожидаемого", "Test Advertiser,Youtube,Sasha Grey", saved.getValue());
     }
 
     @Test
@@ -140,9 +141,26 @@ public class ArticlesPageTests extends Fixtures {
         articlesPageSteps.scrollDownArticleDescription();
         articlesPageSteps.clickButton("Move to saved");
         Cookie saved = articlesPageSteps.getCookie("saved");
-        Assert.assertEquals("Test Advertiser", saved.getValue());
+        Assert.assertEquals("Значение куки отличается от ожидаемого", "Test Advertiser", saved.getValue());
         articlesPageSteps.clickButton("Removed from saved");
         saved = articlesPageSteps.getCookie("saved");
-        Assert.assertNull(saved);
+        Assert.assertNull("Кука должна быть пустой", saved);
+    }
+
+    @Test
+    @Story("Проверить, что размеры изобращения героя изменяютя при помощи слайдера")
+    public void changeHeroImageSizeTest() {
+        ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
+        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        articlesPageSteps.clickButton("Advertisers");
+        articlesPageSteps.clickButton("Test Advertiser");
+        Dimension heroImageSize = articlesPageSteps.getHeroImageSize();
+        articlesPageSteps.scrollSlider(500);
+        Dimension newHeroImageSize = articlesPageSteps.getHeroImageSize();
+        Assert.assertTrue("Размер изображения героя не изменился", newHeroImageSize.getHeight() > heroImageSize.getHeight()
+                && newHeroImageSize.getWidth() > heroImageSize.getWidth());
+        articlesPageSteps.scrollSlider(-500);
+        newHeroImageSize = articlesPageSteps.getHeroImageSize();
+        Assert.assertEquals("Размер изображения героя не вернулся к начальному значению", newHeroImageSize, heroImageSize);
     }
 }
