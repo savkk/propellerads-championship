@@ -26,6 +26,7 @@
         <slf4j-log4j12.version>1.7.29</slf4j-log4j12.version>
         <webdriver-matchers.version>1.4.1</webdriver-matchers.version>
         <assertj-core.version>3.11.0</assertj-core.version>
+        <suite>alltests</suite>
     </properties>
 
     <build>
@@ -35,6 +36,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/suites/${suite}.xml</suiteXmlFile>
+                    </suiteXmlFiles>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>

@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="PropellerAds Championship" parallel="tests" thread-count="3">
+    <test name="Login Page Tests">
+        <classes>
+            <class name="com.github.savkk.propeller.LoginPageTests"/>
+        </classes>
+    </test>
+    <test name="Articles Page Tests">
+        <classes>
+            <class name="com.github.savkk.propeller.ArticlesPageTests"/>
+        </classes>
+    </test>
+    <test name="Profile Page Tests">
+        <classes>
+            <class name="com.github.savkk.propeller.ProfilePageTests"/>
+        </classes>
+    </test>
+</suite>

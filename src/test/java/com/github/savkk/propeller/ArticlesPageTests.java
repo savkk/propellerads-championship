@@ -14,6 +14,8 @@ import org.testng.annotations.Test;
 
 import java.nio.file.Paths;
 
+import static com.github.savkk.propeller.constants.ErrorMessages.PAGE_IS_NOT_LOADED;
+
 @Feature("Страница информации о существующих клиентах")
 public class ArticlesPageTests extends Fixtures {
     private static final String FILE_NAME = "data.txt";
@@ -21,7 +23,7 @@ public class ArticlesPageTests extends Fixtures {
     @BeforeMethod(description = "Вход в систему")
     public void login() {
         LoginPageSteps loginPageSteps = new LoginPageSteps(getWebDriver());
-        Assert.assertTrue("Страница логина не загрузилась", loginPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, loginPageSteps.isLoaded());
         loginPageSteps.signInByCookie(credentialsConfig.cookieSecretKey(), credentialsConfig.cookieSecretValue());
     }
 
@@ -29,21 +31,24 @@ public class ArticlesPageTests extends Fixtures {
     @Story("Проверка количества статей по разделам")
     public void checkArticlesCount() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         SoftAssertions softAssertions = new SoftAssertions();
         ElementsCollection advertisers = articlesPageSteps.getArticleList("Advertisers");
-        softAssertions.assertThat(advertisers).withFailMessage("Количество статей в разделе Advertisers отличается от ожидаемого")
+        softAssertions.assertThat(advertisers)
+                .withFailMessage("Количество статей в разделе Advertisers отличается от ожидаемого")
                 .hasSize(2);
 
         articlesPageSteps.clickButton("Publishers");
         ElementsCollection publishers = articlesPageSteps.getArticleList("Publishers");
-        softAssertions.assertThat(publishers).withFailMessage("Количество статей в разделе Publishers отличается от ожидаемого")
+        softAssertions.assertThat(publishers)
+                .withFailMessage("Количество статей в разделе Publishers отличается от ожидаемого")
                 .hasSize(2);
 
         articlesPageSteps.clickButton("Top level clients");
         ElementsCollection topLevelClients = articlesPageSteps.getArticleList("Top level clients");
-        softAssertions.assertThat(topLevelClients).withFailMessage("Количество статей в разделе Top level clients отличается от ожидаемого")
+        softAssertions.assertThat(topLevelClients)
+                .withFailMessage("Количество статей в разделе Top level clients отличается от ожидаемого")
                 .hasSize(10);
         softAssertions.assertAll();
     }
@@ -52,7 +57,7 @@ public class ArticlesPageTests extends Fixtures {
     @Story("Проверка скачивания описания из статьи")
     public void checkArticleDownload() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         articlesPageSteps.clickButton("Test Advertiser");
         articlesPageSteps.clickButton("Download info");
@@ -65,7 +70,7 @@ public class ArticlesPageTests extends Fixtures {
     @Story("Проверка, что кнопка Move to saved становится доступной только после полного прочтения описания")
     public void moveToSavedTest() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         articlesPageSteps.clickButton("Test Advertiser");
         Assert.assertFalse("Кнопка Move to saved не должна быть активной",
@@ -79,7 +84,7 @@ public class ArticlesPageTests extends Fixtures {
     @Story("Проверка добавления открытых разделов в куки notSavedOpened")
     public void notSavedOpenedCookieTest() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         Cookie notSavedOpened = articlesPageSteps.getCookie("notSavedOpened");
         Assert.assertNull(notSavedOpened);
         articlesPageSteps.clickButton("Advertisers");
@@ -97,7 +102,7 @@ public class ArticlesPageTests extends Fixtures {
     @Story("Проверка сохранения статьи")
     public void articleMoveToSavedTest() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         articlesPageSteps.clickButton("Test Advertiser");
         articlesPageSteps.scrollDownArticleDescription();
@@ -110,7 +115,7 @@ public class ArticlesPageTests extends Fixtures {
     @Story("Проверка сохранения статей из каждого раздела")
     public void articlesFromAllSectionsMoveToSavedTest() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         articlesPageSteps.clickButton("Test Advertiser");
         articlesPageSteps.scrollDownArticleDescription();
@@ -128,14 +133,16 @@ public class ArticlesPageTests extends Fixtures {
         articlesPageSteps.scrollDownArticleDescription();
         articlesPageSteps.clickButton("Move to saved");
         saved = articlesPageSteps.getCookie("saved");
-        Assert.assertEquals("Значение куки отличается от ожидаемого", "Test Advertiser,Youtube,Sasha Grey", saved.getValue());
+        Assert.assertEquals("Значение куки отличается от ожидаемого",
+                "Test Advertiser,Youtube,Sasha Grey",
+                saved.getValue());
     }
 
     @Test
     @Story("Проверка удаления статьи")
     public void articleRemoveFromSavedTest() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         articlesPageSteps.clickButton("Test Advertiser");
         articlesPageSteps.scrollDownArticleDescription();
@@ -151,7 +158,7 @@ public class ArticlesPageTests extends Fixtures {
     @Story("Проверить, что размеры изобращения героя изменяютя при помощи слайдера")
     public void changeHeroImageSizeTest() {
         ArticlesPageSteps articlesPageSteps = new ArticlesPageSteps(getWebDriver());
-        Assert.assertTrue("Страница со статьями не загрузилась", articlesPageSteps.isLoaded());
+        Assert.assertTrue(PAGE_IS_NOT_LOADED, articlesPageSteps.isLoaded());
         articlesPageSteps.clickButton("Advertisers");
         articlesPageSteps.clickButton("Test Advertiser");
         Dimension heroImageSize = articlesPageSteps.getHeroImageSize();
