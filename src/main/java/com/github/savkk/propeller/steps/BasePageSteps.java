@@ -109,6 +109,13 @@ abstract class BasePageSteps<Page extends BasePage> {
         return (T) this;
     }
 
+    @Step("Очистить поле '{fieldTitle}'")
+    public <T extends BasePageSteps> T clearField(String fieldTitle) {
+        log.info("Очистить поле '{}'", fieldTitle);
+        onPage().field(fieldTitle).clear();
+        return (T) this;
+    }
+
     @Step("Получить значение из поля '{fieldTitle}'")
     public String getFieldValue(String fieldTitle) {
         log.info("Получить значение из поля {}", fieldTitle);

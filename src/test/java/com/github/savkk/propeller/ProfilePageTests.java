@@ -59,6 +59,34 @@ public class ProfilePageTests extends Fixtures {
         Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please set your first name."));
     }
 
+    @Story("Проверка исчезновения ошибки после заполнения поля First Name")
+    @Test
+    public void fillAfterErrorFirstNameTest() {
+        ProfilePageSteps profilePageSteps = new ProfilePageSteps(getWebDriver());
+        Assert.assertTrue("Страница профиля пользователя не загрузилась полностью", profilePageSteps.isLoaded());
+        profilePageSteps.clickButton("Save user info");
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please set your first name."));
+        profilePageSteps.fillField("First name", "Stephen");
+        profilePageSteps.clickButton("Save user info");
+        Assert.assertFalse(profilePageSteps.invalidFeedbackIsDisplayed("Please set your first name."));
+    }
+
+
+    @Story("Проверка исчезновения ошибки после заполнения поля Last Name")
+    @Test
+    public void fillAfterErrorLastNameTest() {
+        ProfilePageSteps profilePageSteps = new ProfilePageSteps(getWebDriver());
+        Assert.assertTrue("Страница профиля пользователя не загрузилась полностью", profilePageSteps.isLoaded());
+        profilePageSteps.fillField("First name", "Stephen");
+        profilePageSteps.clickButton("Save user info");
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please set your last name."));
+        profilePageSteps.clearField("First name");
+        profilePageSteps.fillField("Last name", "Hawking");
+        profilePageSteps.clickButton("Save user info");
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please set your first name."));
+        Assert.assertFalse(profilePageSteps.invalidFeedbackIsDisplayed("Please set your last name."));
+    }
+
     @Story("Проверка появления ошибки при пустых значениях фамилии и имени")
     @Test
     public void noFillNameTest() {
