@@ -107,15 +107,16 @@ public class ProfilePageTests extends Fixtures {
         profilePageSteps.fillField("Card Number", cardNumber);
         String paymentSystem = "Visa";
         profilePageSteps.selectPaymentSystem(paymentSystem);
+        profilePageSteps.selectPaymentDay(5);
         profilePageSteps.clickButton("Save payment info");
         Assert.assertEquals(cardNumber, profilePageSteps.getCookie("cardNumber").getValue());
         Assert.assertEquals("1", profilePageSteps.getCookie("paymentSystem").getValue());
-        Assert.assertEquals("1", profilePageSteps.getCookie("paymentDay").getValue());
+        Assert.assertEquals("5", profilePageSteps.getCookie("paymentDay").getValue());
         getWebDriver().navigate().refresh();
         profilePageSteps.clickMenu("Payment info");
         Assert.assertEquals(cardNumber, profilePageSteps.getFieldValue("Card Number"));
         Assert.assertEquals(paymentSystem, profilePageSteps.getPaymentSystem());
-        Assert.assertEquals("Current value: 1", profilePageSteps.getDayOfPayment());
+        Assert.assertEquals("Current value: 5", profilePageSteps.getDayOfPayment());
     }
 
     @Story("Проверка появления ошибки при сохранении пустых полей о платежной информации")

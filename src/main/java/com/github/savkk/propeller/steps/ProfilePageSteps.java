@@ -2,6 +2,7 @@ package com.github.savkk.propeller.steps;
 
 import com.github.savkk.propeller.pages.ProfilePage;
 import io.qameta.allure.Step;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
@@ -69,5 +70,13 @@ public final class ProfilePageSteps extends BasePageSteps<ProfilePage> {
         String text = onPage().dayOfPaymentBlock().currentValue().getText();
         log.info("{}", text);
         return text;
+    }
+
+    @Step("Выбрать день платежа {day}")
+    public void selectPaymentDay(int day) {
+        log.info("Выбрать день платежа {}", day);
+        ((JavascriptExecutor) getWebDriver()).executeScript("arguments[0].value = arguments[1];",
+                onPage().dayOfPaymentBlock().inputDayRange().waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT),
+                day);
     }
 }

@@ -7,4 +7,7 @@ public interface DayOfPaymentBlock extends AtlasWebElement<DayOfPaymentBlock> {
 
     @FindBy(".//h6")
     AtlasWebElement currentValue();
+
+    @FindBy(".//input[@type='range']")
+    AtlasWebElement inputDayRange();
 }
