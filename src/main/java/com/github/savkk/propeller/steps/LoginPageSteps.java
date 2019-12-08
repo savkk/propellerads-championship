@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import static ru.yandex.qatools.matchers.webdriver.DisplayedMatcher.displayed;
 
-public final class LoginPageSteps extends PageSteps<LoginPage> {
+public final class LoginPageSteps extends BasePageSteps<LoginPage> {
     private static final Logger log = LoggerFactory.getLogger(LoginPageSteps.class);
 
     @Step("Войти в систему под - '{user}'/'{password}'")
@@ -24,18 +24,19 @@ public final class LoginPageSteps extends PageSteps<LoginPage> {
     }
 
     @Step("Активировать и заполнить поле '{fieldTitle}' значением '{value}'")
+    @Override
     public LoginPageSteps fillField(String fieldTitle, String value) {
         log.info("Активировать и заполнить поле '{}' значением '{}'", fieldTitle, value);
-        $().field(fieldTitle).activator().click();
-        $().field(fieldTitle).sendKeys(value);
+        onPage().field(fieldTitle).activator().click();
+        onPage().field(fieldTitle).sendKeys(value);
         return this;
     }
 
     @Step("Подождать появление кнопки 'Sign In' и нажать на неё")
     public LoginPageSteps clickSignIn() {
         log.info("Подождать появление кнопки 'Sign In' и нажать на неё");
-        moveToElement($().button("Hover me faster!"), "Навести курсор на кнопку 'Hover me faster!'");
-        $().signInButton()
+        moveToElement(onPage().button("Hover me faster!"), "Навести курсор на кнопку 'Hover me faster!'");
+        onPage().signInButton()
                 .waitUntil("Кнопка Sign In не отобразилась", displayed(), TIMEOUTS_CONFIG.webDriverWait())
                 .click();
         return this;
@@ -47,16 +48,16 @@ public final class LoginPageSteps extends PageSteps<LoginPage> {
     }
 
     @Override
-    protected LoginPage $() {
+    protected LoginPage onPage() {
         return open(LoginPage.class);
     }
 
     @Override
     public boolean isLoaded() {
         try {
-            return $().title().isDisplayed() &&
-                    $().field("Your Login").isDisplayed() &&
-                    $().field("Your Password").isDisplayed();
+            return onPage().title().isDisplayed() &&
+                    onPage().field("Your Login").isDisplayed() &&
+                    onPage().field("Your Password").isDisplayed();
         } catch (WebDriverException e) {
             return false;
         }

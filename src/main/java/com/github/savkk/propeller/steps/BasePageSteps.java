@@ -1,6 +1,7 @@
 package com.github.savkk.propeller.steps;
 
 import com.github.savkk.propeller.config.TimeOutsConfig;
+import com.github.savkk.propeller.pages.BasePage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import io.qameta.atlas.core.Atlas;
@@ -21,15 +22,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.awaitility.Awaitility.await;
+import static ru.yandex.qatools.matchers.webdriver.DisplayedMatcher.displayed;
 
-abstract class PageSteps<T> {
-    private static final Logger log = LoggerFactory.getLogger(PageSteps.class);
+abstract class BasePageSteps<Page extends BasePage> {
+    private static final Logger log = LoggerFactory.getLogger(BasePageSteps.class);
     private final WebDriver webDriver;
     private final Atlas atlas;
     protected static final TimeOutsConfig TIMEOUTS_CONFIG = ConfigFactory.create(TimeOutsConfig.class);
     protected static final int WEBDRIVER_WAIT_TIMEOUT = TIMEOUTS_CONFIG.webDriverWait();
 
-    protected PageSteps(WebDriver webDriver) {
+    protected BasePageSteps(WebDriver webDriver) {
         this.webDriver = webDriver;
         this.atlas = new Atlas(new WebDriverConfiguration(webDriver));
     }
@@ -38,7 +40,7 @@ abstract class PageSteps<T> {
         return new WebDriverWait(webDriver, timeout);
     }
 
-    protected T open(Class<T> page) {
+    protected Page open(Class<Page> page) {
         return atlas.create(webDriver, page);
     }
 
@@ -47,7 +49,7 @@ abstract class PageSteps<T> {
     }
 
     @Step("Подтвердить высплывающиее окно с текстом - {expectedAlertText}")
-    public T acceptAlert(String expectedAlertText, int timeout) {
+    public <T extends BasePageSteps> T acceptAlert(String expectedAlertText, int timeout) {
         log.info("Подтвердить высплывающиее окно с текстом - {}", expectedAlertText);
         getWebDriverWait(webDriver, timeout)
                 .withMessage("Всплывающиее окно с текстом " + expectedAlertText + " не появилось")
@@ -100,7 +102,39 @@ abstract class PageSteps<T> {
         return cookieNamed;
     }
 
-    protected abstract T $();
+    @Step("Заполнить поле '{fieldTitle}' значением '{value}'")
+    public <T extends BasePageSteps> T fillField(String fieldTitle, String value) {
+        log.info("Заполнить поле '{}' значением '{}'", fieldTitle, value);
+        onPage().field(fieldTitle).sendKeys(value);
+        return (T) this;
+    }
+
+    @Step("Получить значение из поля '{fieldTitle}'")
+    public String getFieldValue(String fieldTitle) {
+        log.info("Получить значение из поля {}", fieldTitle);
+        String text = onPage().field(fieldTitle).getAttribute("value");
+        log.info("Значение - {}", text);
+        return text;
+    }
+
+    @Step("Кликнуть по кнопке {buttonTitle}")
+    public <T extends BasePageSteps> T clickButton(String buttonTitle) {
+        log.info("Кликнуть по кнопке {}", buttonTitle);
+        onPage().button(buttonTitle).waitUntil("Кнопка " + buttonTitle + " не отобразилась", displayed(), WEBDRIVER_WAIT_TIMEOUT)
+                .click();
+        return (T) this;
+    }
+
+    @Step("Кнопка 'buttonTitle' активна")
+    public boolean buttonIsEnabled(String buttonTitle) {
+        boolean enabled = onPage().button(buttonTitle)
+                .waitUntil("Кнопка " + buttonTitle + " не отобразилась", displayed(), WEBDRIVER_WAIT_TIMEOUT)
+                .isEnabled();
+        Allure.addAttachment("Активна", enabled ? "да" : "нет");
+        return enabled;
+    }
+
+    protected abstract Page onPage();
 
     public abstract boolean isLoaded();
 }

@@ -1,13 +1,18 @@
 package com.github.savkk.propeller.pages;
 
-import com.github.savkk.propeller.elements.WithButton;
-import com.github.savkk.propeller.elements.WithField;
 import io.qameta.atlas.webdriver.AtlasWebElement;
-import io.qameta.atlas.webdriver.WebPage;
 import io.qameta.atlas.webdriver.extension.FindBy;
+import io.qameta.atlas.webdriver.extension.Param;
 
-public interface ProfilePage extends WithField, WithButton, WebPage {
+public interface ProfilePage extends BasePage {
 
     @FindBy("//select[@id='paymentSystemSelect']")
     AtlasWebElement paymentSystemSelect();
+
+    @FindBy("//a[text()='{{ menuTitle }}']")
+    AtlasWebElement menuButton(@Param("menuTitle") String menuTitle);
+
+
+    @FindBy("//div[@class='invalid-feedback'][normalize-space(.)='{{ message }}']")
+    AtlasWebElement invalidFeedback(@Param("message") String expecteMessage);
 }

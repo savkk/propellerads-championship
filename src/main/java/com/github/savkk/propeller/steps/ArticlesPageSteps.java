@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import static ru.yandex.qatools.matchers.webdriver.DisplayedMatcher.displayed;
 
-public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
+public final class ArticlesPageSteps extends BasePageSteps<ArticlesPage> {
     private static final Logger log = LoggerFactory.getLogger(ArticlesPageSteps.class);
 
     public ArticlesPageSteps(WebDriver webDriver) {
@@ -22,25 +22,18 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
     @Override
     public boolean isLoaded() {
         try {
-            return $().button("Advertisers").isDisplayed() &&
-                    $().button("Publishers").isDisplayed() &&
-                    $().button("Top level clients").isDisplayed();
+            return onPage().button("Advertisers").isDisplayed() &&
+                    onPage().button("Publishers").isDisplayed() &&
+                    onPage().button("Top level clients").isDisplayed();
         } catch (WebDriverException e) {
             return false;
         }
     }
 
-    @Step("Кликнуть по кнопке {buttonTitle}")
-    public void clickButton(String buttonTitle) {
-        log.info("Кликнуть по кнопке {}", buttonTitle);
-        $().button(buttonTitle).waitUntil("Кнопка " + buttonTitle + " не отобразилась", displayed(), WEBDRIVER_WAIT_TIMEOUT)
-                .click();
-    }
-
     @Step("Получить описание из открытой статьи")
     public String getArticleDescription() {
         log.info("Получить описание из открытой статьи");
-        String text = $().card().discription().getAttribute("value");
+        String text = onPage().card().discription().getAttribute("value");
         log.info("Текст описания: \n{}", text);
         Allure.addAttachment("Текст", text);
         return text;
@@ -49,37 +42,33 @@ public final class ArticlesPageSteps extends PageSteps<ArticlesPage> {
     @Step("Получить список статей в разделе {sectionTitle}")
     public ElementsCollection<AtlasWebElement> getArticleList(String sectionTitle) {
         log.info("Получить список статей в разделе {}", sectionTitle);
-        return $().subTreeButtons(sectionTitle);
+        return onPage().subTreeButtons(sectionTitle);
     }
 
     @Override
-    protected ArticlesPage $() {
+    protected ArticlesPage onPage() {
         return open(ArticlesPage.class);
-    }
-
-    @Step("Кнопка 'buttonTitle' активна")
-    public boolean buttonIsEnabled(String buttonTitle) {
-        boolean enabled = $().button(buttonTitle)
-                .waitUntil("Кнопка " + buttonTitle + " не отобразилась", displayed(), WEBDRIVER_WAIT_TIMEOUT)
-                .isEnabled();
-        Allure.addAttachment("Активна", enabled ? "да" : "нет");
-        return enabled;
     }
 
     @Step("Прокрутить описание статьи до конца")
     public void scrollDownArticleDescription() {
         ((JavascriptExecutor) getWebDriver()).executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;",
-                $().card().discription().waitUntil(displayed()));
+                onPage().card().discription().waitUntil(displayed()));
     }
 
     @Step("Передвинуть слайдер на {offset} пикселей")
     public void scrollSlider(int offset) {
-        WebElement slider = $().card().slider().waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT);
+        WebElement slider = onPage().card().slider().waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT);
         new Actions(getWebDriver()).dragAndDropBy(slider, offset, 0).perform();
     }
 
     @Step("Получить размеры изображения героя")
     public Dimension getHeroImageSize() {
-        return $().card().heroImage().getSize();
+        return onPage().card().heroImage().getSize();
+    }
+
+    @Step("Зайти на страницу профиля пользователя")
+    public void openProfile() {
+        onPage().avatar().waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT).click();
     }
 }
