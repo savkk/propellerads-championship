@@ -3,8 +3,11 @@ package com.github.savkk.propeller.steps;
 import com.github.savkk.propeller.pages.ProfilePage;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static ru.yandex.qatools.matchers.webdriver.DisplayedMatcher.displayed;
 
 public final class ProfilePageSteps extends BasePageSteps<ProfilePage> {
     private static final Logger log = LoggerFactory.getLogger(ProfilePageSteps.class);
@@ -33,5 +36,38 @@ public final class ProfilePageSteps extends BasePageSteps<ProfilePage> {
         boolean displayed = onPage().invalidFeedback(expectedMessage).isDisplayed();
         log.info("{}", displayed);
         return displayed;
+    }
+
+    @Step("Кликнуть по пункту меню {menuTitle}")
+    public ProfilePageSteps clickMenu(String menuTitle) {
+        log.info("Кликнуть по пункту меню {}", menuTitle);
+        onPage().menuButton(menuTitle).waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT).click();
+        return this;
+    }
+
+    @Step("Выбрать платежную систему {paymentSystem}")
+    public ProfilePageSteps selectPaymentSystem(String paymentSystem) {
+        log.info("Выбрать платежную систему {}", paymentSystem);
+        Select webElement = new Select(onPage().paymentSystemSelect().waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT));
+        webElement.selectByVisibleText(paymentSystem);
+        return this;
+    }
+
+    @Step("Получить текущую платежную систему")
+    public String getPaymentSystem() {
+        log.info("Получить текущую платежную систему");
+        String text = new Select(onPage().paymentSystemSelect().waitUntil(displayed(), WEBDRIVER_WAIT_TIMEOUT))
+                .getFirstSelectedOption()
+                .getText();
+        log.info("{}", text);
+        return text;
+    }
+
+    @Step("Получить текущий день платежа")
+    public String getDayOfPayment() {
+        log.info("Получить текущий день платежа");
+        String text = onPage().dayOfPaymentBlock().currentValue().getText();
+        log.info("{}", text);
+        return text;
     }
 }

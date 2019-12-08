@@ -97,5 +97,76 @@ public class ProfilePageTests extends Fixtures {
         Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please set your first name."));
     }
 
+    @Story("Проверка сохранения платежной информации")
+    @Test
+    public void savePaymentInfo() {
+        ProfilePageSteps profilePageSteps = new ProfilePageSteps(getWebDriver());
+        Assert.assertTrue("Страница профиля пользователя не загрузилась полностью", profilePageSteps.isLoaded());
+        profilePageSteps.clickMenu("Payment info");
+        String cardNumber = "1234 1234 1234 1234";
+        profilePageSteps.fillField("Card Number", cardNumber);
+        String paymentSystem = "Visa";
+        profilePageSteps.selectPaymentSystem(paymentSystem);
+        profilePageSteps.clickButton("Save payment info");
+        Assert.assertEquals(cardNumber, profilePageSteps.getCookie("cardNumber").getValue());
+        Assert.assertEquals("1", profilePageSteps.getCookie("paymentSystem").getValue());
+        Assert.assertEquals("1", profilePageSteps.getCookie("paymentDay").getValue());
+        getWebDriver().navigate().refresh();
+        profilePageSteps.clickMenu("Payment info");
+        Assert.assertEquals(cardNumber, profilePageSteps.getFieldValue("Card Number"));
+        Assert.assertEquals(paymentSystem, profilePageSteps.getPaymentSystem());
+        Assert.assertEquals("Current value: 1", profilePageSteps.getDayOfPayment());
+    }
+
+    @Story("Проверка появления ошибки при сохранении пустых полей о платежной информации")
+    @Test
+    public void saveInvalidPaymentInfo() {
+        ProfilePageSteps profilePageSteps = new ProfilePageSteps(getWebDriver());
+        Assert.assertTrue("Страница профиля пользователя не загрузилась полностью", profilePageSteps.isLoaded());
+        profilePageSteps.clickMenu("Payment info");
+        profilePageSteps.clickButton("Save payment info");
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please set your card number."));
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please select your payment system."));
+    }
+
+    @Story("Проверка появления ошибки при сохранении пустого поля с информацией о платежной системе")
+    @Test
+    public void saveInvalidPaymentSystemInfoTest() {
+        ProfilePageSteps profilePageSteps = new ProfilePageSteps(getWebDriver());
+        Assert.assertTrue("Страница профиля пользователя не загрузилась полностью", profilePageSteps.isLoaded());
+        profilePageSteps.clickMenu("Payment info");
+        profilePageSteps.fillField("Card Number", "1234 1234 1234 1234");
+        profilePageSteps.clickButton("Save payment info");
+        Assert.assertFalse(profilePageSteps.invalidFeedbackIsDisplayed("Please set your card number."));
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please select your payment system."));
+    }
+
+    @Story("Проверка исчезновения ошибки после заполнения поля Card Number")
+    @Test
+    public void fillAfterErrorCardNumberTest() {
+        ProfilePageSteps profilePageSteps = new ProfilePageSteps(getWebDriver());
+        Assert.assertTrue("Страница профиля пользователя не загрузилась полностью", profilePageSteps.isLoaded());
+        profilePageSteps.clickMenu("Payment info");
+        profilePageSteps.clickButton("Save payment info");
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please set your card number."));
+        profilePageSteps.fillField("Card Number", "1234 1234 1234 1234");
+        profilePageSteps.clickButton("Save payment info");
+        Assert.assertFalse(profilePageSteps.invalidFeedbackIsDisplayed("Please set your card number."));
+    }
+
+    @Story("Проверка исчезновения ошибки после заполнения поля с информацией о платежной системе")
+    @Test
+    public void fillAfterErrorPaymentSystemInfoTest() {
+        ProfilePageSteps profilePageSteps = new ProfilePageSteps(getWebDriver());
+        Assert.assertTrue("Страница профиля пользователя не загрузилась полностью", profilePageSteps.isLoaded());
+        profilePageSteps.clickMenu("Payment info");
+        profilePageSteps.fillField("Card Number", "1234 1234 1234 1234");
+        profilePageSteps.clickButton("Save payment info");
+        Assert.assertTrue(profilePageSteps.invalidFeedbackIsDisplayed("Please select your payment system."));
+        profilePageSteps.clearField("Card Number");
+        profilePageSteps.selectPaymentSystem("Visa");
+        profilePageSteps.clickButton("Save payment info");
+        Assert.assertFalse(profilePageSteps.invalidFeedbackIsDisplayed("Please select your payment system."));
+    }
 
 }
