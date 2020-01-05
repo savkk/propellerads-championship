@@ -3,17 +3,17 @@
 <suite name="PropellerAds Championship" parallel="tests" thread-count="3">
     <test name="Login Page Tests">
         <classes>
-            <class name="com.github.savkk.propeller.LoginPageTests"/>
+            <class name="com.github.savkk.propeller.tests.LoginPageTests"/>
         </classes>
     </test>
     <test name="Articles Page Tests">
         <classes>
-            <class name="com.github.savkk.propeller.ArticlesPageTests"/>
+            <class name="com.github.savkk.propeller.tests.ArticlesPageTests"/>
         </classes>
     </test>
     <test name="Profile Page Tests">
         <classes>
-            <class name="com.github.savkk.propeller.ProfilePageTests"/>
+            <class name="com.github.savkk.propeller.tests.ProfilePageTests"/>
         </classes>
     </test>
 </suite>

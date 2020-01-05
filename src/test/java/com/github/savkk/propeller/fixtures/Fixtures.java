@@ -1,5 +1,6 @@
-package com.github.savkk.propeller;
+package com.github.savkk.propeller.fixtures;
 
+import com.github.savkk.propeller.WebDriverFactory;
 import com.github.savkk.propeller.config.AutConfig;
 import com.github.savkk.propeller.config.CredentialsConfig;
 import com.github.savkk.propeller.config.TimeOutsConfig;

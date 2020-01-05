@@ -27,6 +27,7 @@
         <webdriver-matchers.version>1.4.1</webdriver-matchers.version>
         <assertj-core.version>3.11.0</assertj-core.version>
         <suite>alltests</suite>
+        <archunit.version>0.12.0</archunit.version>
     </properties>
 
     <build>
@@ -133,6 +134,12 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit</artifactId>
+            <version>${archunit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

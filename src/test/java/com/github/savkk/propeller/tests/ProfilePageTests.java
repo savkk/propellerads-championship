@@ -1,5 +1,6 @@
-package com.github.savkk.propeller;
+package com.github.savkk.propeller.tests;
 
+import com.github.savkk.propeller.fixtures.Fixtures;
 import com.github.savkk.propeller.steps.ArticlesPageSteps;
 import com.github.savkk.propeller.steps.LoginPageSteps;
 import com.github.savkk.propeller.steps.ProfilePageSteps;
