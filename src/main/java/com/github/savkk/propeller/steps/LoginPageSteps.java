@@ -53,6 +53,7 @@ public final class LoginPageSteps extends BasePageSteps<LoginPage> {
     }
 
     @Override
+    @Step("Страница Login загружена")
     public boolean isLoaded() {
         try {
             return onPage().title().isDisplayed() &&

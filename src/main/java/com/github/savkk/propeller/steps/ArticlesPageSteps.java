@@ -20,6 +20,7 @@ public final class ArticlesPageSteps extends BasePageSteps<ArticlesPage> {
     }
 
     @Override
+    @Step("Страница Articles загружена")
     public boolean isLoaded() {
         try {
             return onPage().button("Advertisers").isDisplayed() &&

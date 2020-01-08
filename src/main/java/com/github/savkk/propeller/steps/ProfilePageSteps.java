@@ -23,6 +23,7 @@ public final class ProfilePageSteps extends BasePageSteps<ProfilePage> {
     }
 
     @Override
+    @Step("Страница Profile загружена")
     public boolean isLoaded() {
         return onPage().button("Save user info").isDisplayed()
                 && onPage().field("First name").isDisplayed()

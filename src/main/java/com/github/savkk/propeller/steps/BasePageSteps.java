@@ -44,7 +44,7 @@ abstract class BasePageSteps<Page extends BasePage> {
         return atlas.create(webDriver, page);
     }
 
-    public WebDriver getWebDriver() {
+    protected WebDriver getWebDriver() {
         return webDriver;
     }
 
@@ -148,5 +148,6 @@ abstract class BasePageSteps<Page extends BasePage> {
 
     protected abstract Page onPage();
 
+    @Step("Страница загружена")
     public abstract boolean isLoaded();
 }
