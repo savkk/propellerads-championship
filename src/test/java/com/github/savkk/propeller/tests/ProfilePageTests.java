@@ -34,9 +34,9 @@ public class ProfilePageTests extends Fixtures {
         profilePageSteps.fillField("First name", firstName);
         profilePageSteps.fillField("Last name", lastName);
         profilePageSteps.clickButton("Save user info");
-        Assert.assertEquals(firstName, profilePageSteps.getCookie("firstName").getValue());
-        Assert.assertEquals(lastName, profilePageSteps.getCookie("lastName").getValue());
-        profilePageSteps.getWebDriver().navigate().refresh();
+        Assert.assertEquals(firstName, profilePageSteps.getCookieValue("firstName"));
+        Assert.assertEquals(lastName, profilePageSteps.getCookieValue("lastName"));
+        profilePageSteps.refresh();
         Assert.assertEquals(firstName, profilePageSteps.getFieldValue("First name"));
         Assert.assertEquals(lastName, profilePageSteps.getFieldValue("Last name"));
     }
@@ -124,10 +124,10 @@ public class ProfilePageTests extends Fixtures {
         profilePageSteps.selectPaymentSystem(paymentSystem);
         profilePageSteps.selectPaymentDay(5);
         profilePageSteps.clickButton("Save payment info");
-        Assert.assertEquals(cardNumber, profilePageSteps.getCookie("cardNumber").getValue());
-        Assert.assertEquals("1", profilePageSteps.getCookie("paymentSystem").getValue());
-        Assert.assertEquals("5", profilePageSteps.getCookie("paymentDay").getValue());
-        getWebDriver().navigate().refresh();
+        Assert.assertEquals(cardNumber, profilePageSteps.getCookieValue("cardNumber"));
+        Assert.assertEquals("1", profilePageSteps.getCookieValue("paymentSystem"));
+        Assert.assertEquals("5", profilePageSteps.getCookieValue("paymentDay"));
+        profilePageSteps.refresh();
         profilePageSteps.clickMenu("Payment info");
         Assert.assertEquals(cardNumber, profilePageSteps.getFieldValue("Card Number"));
         Assert.assertEquals(paymentSystem, profilePageSteps.getPaymentSystem());

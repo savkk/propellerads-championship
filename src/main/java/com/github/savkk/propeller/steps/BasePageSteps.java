@@ -94,12 +94,12 @@ abstract class BasePageSteps<Page extends BasePage> {
     }
 
     @Step("Получить куки {cookieKey}")
-    public Cookie getCookie(String cookieKey) {
+    public String getCookieValue(String cookieKey) {
         log.info("Получить куки {}", cookieKey);
         Cookie cookieNamed = getWebDriver().manage().getCookieNamed(cookieKey);
         log.info("Значение куки - {}", cookieNamed);
         Allure.addAttachment("Значение куки", String.valueOf(cookieNamed));
-        return cookieNamed;
+        return cookieNamed.getValue();
     }
 
     @Step("Заполнить поле '{fieldTitle}' значением '{value}'")
@@ -139,6 +139,11 @@ abstract class BasePageSteps<Page extends BasePage> {
                 .isEnabled();
         Allure.addAttachment("Активна", enabled ? "да" : "нет");
         return enabled;
+    }
+
+    @Step("Обновить страницу")
+    public void refresh() {
+        getWebDriver().navigate().refresh();
     }
 
     protected abstract Page onPage();

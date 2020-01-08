@@ -4,6 +4,7 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import org.testng.annotations.Test;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 
@@ -19,5 +20,15 @@ public class ArchTests {
                 .whereLayer("Tests").mayNotBeAccessedByAnyLayer()
                 .whereLayer("Steps").mayOnlyBeAccessedByLayers("Tests")
                 .whereLayer("Pages").mayOnlyBeAccessedByLayers("Steps").check(tests);
+    }
+
+    @Test
+    public void noDirectAccessToSeleniumClasses() {
+        noClasses()
+                .that()
+                .resideInAPackage("..tests..")
+                .should()
+                .accessClassesThat()
+                .resideInAPackage("org.openqa.selenium..").check(tests);
     }
 }

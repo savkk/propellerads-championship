@@ -62,9 +62,14 @@ public final class ArticlesPageSteps extends BasePageSteps<ArticlesPage> {
         new Actions(getWebDriver()).dragAndDropBy(slider, offset, 0).perform();
     }
 
-    @Step("Получить размеры изображения героя")
-    public Dimension getHeroImageSize() {
-        return onPage().card().heroImage().getSize();
+    @Step("Получить высоту изображения героя")
+    public int getHeroImageHeight() {
+        return onPage().card().heroImage().getSize().getHeight();
+    }
+
+    @Step("Получить ширину изображения героя")
+    public int getHeroImageWidth() {
+        return onPage().card().heroImage().getSize().getWidth();
     }
 
     @Step("Зайти на страницу профиля пользователя")
