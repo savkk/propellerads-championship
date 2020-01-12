@@ -1,5 +1,7 @@
 # propellerads-championship
 
+Проект, занявший первое место
+
 [Описание задания](https://hub.docker.com/repository/docker/qapropeller/qa-battle)
 
 ## Описание проекта ##
