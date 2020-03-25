@@ -10,11 +10,9 @@ public interface WebDriverConfig extends Config {
     @Key("driver.type")
     String driverType();
 
-    @DefaultValue("2.46")
     @Key("driver.version")
     String driverVersion();
 
-    @DefaultValue("DEFAULT")
     @Key("driver.architecture")
     Architecture driverArchitecture();
 
